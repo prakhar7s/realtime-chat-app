@@ -1,5 +1,6 @@
 var express = require("express");
 var socket = require("socket.io");
+var LISTENERS = require("./assets/listeners");
 
 var app = express();
 
@@ -13,15 +14,18 @@ var server = app.listen(PORT, function () {
 // Setup Socket
 const io = socket(server);
 
-io.on("connection", function (socket) {
+io.on(LISTENERS.CONNECTION, function (socket) {
   console.log("made a connection", socket.id);
 
-  socket.on("message", function (data) {
-    io.sockets.emit("message", data);
+  // Fetch data from db and pass to do frontend
+  io.sockets.emit("INITIAL_MSGS", { msg: "Hello" });
+
+  socket.on(LISTENERS.MESSAGE, function (data) {
+    io.sockets.emit(LISTENERS.MESSAGE, data);
   });
 
-  socket.on("typing", function (data) {
-    socket.broadcast.emit("typing", data);
+  socket.on(LISTENERS.TYPING, function (data) {
+    socket.broadcast.emit(LISTENERS.TYPING, data);
   });
 });
 

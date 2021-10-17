@@ -7,6 +7,8 @@ var output = document.getElementById("messages"),
   sendButton = document.getElementById("send-btn"),
   form = document.getElementById("controls");
 
+console.log(LISTENERS);
+
 sendButton.addEventListener("click", function () {
   io.emit("message", {
     handle: handle.value,
@@ -24,6 +26,10 @@ message.addEventListener("keypress", function () {
 });
 
 io.emit("connection", function (socket) {});
+
+io.on("INITIAL_MSGS", (d) => {
+  console.log(d);
+});
 
 io.on("typing", function (data) {
   //   Notifications
